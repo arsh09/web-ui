@@ -1,5 +1,6 @@
 services:
   browser-use-webui:
+    container_name: webui
     build:
       context: .
       dockerfile: Dockerfile
@@ -49,3 +50,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+
+  zrok-webui:
+    image: openziti/zrok
+    restart: unless-stopped
+    user: "${UID}:${GID}"
+    volumes:
+      - ${HOME}/.zrok:/mnt/.zrok
+    environment:
+      HOME: /mnt
+      PFXLOG_NO_JSON: "true"
+      ZROK_UNIQUE_NAME:  
+    command: share reserved ${ZROK_UNIQUE_NAME} --headless --override-endpoint http://browser-use-webui:7789
