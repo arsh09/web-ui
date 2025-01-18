@@ -1,6 +1,5 @@
 services:
   browser-use-webui:
-    container_name: webui
     build:
       context: .
       dockerfile: Dockerfile
@@ -33,6 +32,7 @@ services:
       - PERSISTENT_BROWSER_HOST=localhost
       - CHROME_DEBUGGING_PORT=9222
       - CHROME_DEBUGGING_HOST=localhost
+      - MODEL_NAME=mistral
     volumes:
       - ./data:/app/data
       - ./data/chrome_data:/app/data/chrome_data
@@ -50,6 +50,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    networks:
+      - shared_network
 
   zrok-webui:
     image: openziti/zrok
@@ -61,16 +63,24 @@ services:
       HOME: /mnt
       PFXLOG_NO_JSON: "true"
       ZROK_UNIQUE_NAME:  
-    command: share reserved ${ZROK_UNIQUE_NAME} --headless --override-endpoint http://browser-use-webui:7789
+    command: share reserved ${ZROK_UNIQUE_NAME} --headless --override-endpoint http://browser-use-webui:7788
+    networks:
+      - shared_network
 
-  # zrok-webui-vnc:
-  #   image: openziti/zrok
-  #   restart: unless-stopped
-  #   user: "${UID}:${GID}"
-  #   volumes:
-  #     - ${HOME}/.zrok:/mnt/.zrok
-  #   environment:
-  #     HOME: /mnt
-  #     PFXLOG_NO_JSON: "true"
-  #     ZROK_UNIQUE_NAME_VNC:  
-  #   command: share reserved ${ZROK_UNIQUE_NAME_VNC} --headless --override-endpoint http://browser-use-webui:6080
+  zrok-webui-vnc:
+    image: openziti/zrok
+    restart: unless-stopped
+    user: "${UID}:${GID}"
+    volumes:
+      - ${HOME}/.zrok:/mnt/.zrok
+    environment:
+      HOME: /mnt
+      PFXLOG_NO_JSON: "true"
+      ZROK_UNIQUE_NAME_VNC:  
+    command: share reserved ${ZROK_UNIQUE_NAME_VNC} --headless --override-endpoint http://browser-use-webui:6080
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
+    driver: bridge

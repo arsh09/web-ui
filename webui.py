@@ -674,8 +674,8 @@ def create_ui(theme_name="Ocean"):
                     )
                     llm_model_name = gr.Dropdown(
                         label="Model Name",
-                        choices=utils.model_names['openai'],
-                        value="gpt-4o",
+                        choices=utils.model_names['ollama'],
+                        value="mistral",
                         interactive=True,
                         allow_custom_value=True,  # Allow users to input custom model names
                         info="Select a model from the dropdown or type a custom model name"
@@ -691,7 +691,7 @@ def create_ui(theme_name="Ocean"):
                     with gr.Row():
                         llm_base_url = gr.Textbox(
                             label="Base URL",
-                            value='',
+                            value='https://ollama.zrok.lcas.group',
                             info="API endpoint URL (if required)"
                         )
                         llm_api_key = gr.Textbox(
@@ -771,7 +771,7 @@ def create_ui(theme_name="Ocean"):
                     label="Task Description",
                     lines=4,
                     placeholder="Enter your task here...",
-                    value="go to google.com and type 'OpenAI' click search and give me the first url",
+                    value="go to www.google.com and find the name of the richest man alive.",
                     info="Describe what you want the agent to do",
                 )
                 add_infos = gr.Textbox(
