@@ -62,3 +62,15 @@ services:
       PFXLOG_NO_JSON: "true"
       ZROK_UNIQUE_NAME:  
     command: share reserved ${ZROK_UNIQUE_NAME} --headless --override-endpoint http://browser-use-webui:7789
+
+  # zrok-webui-vnc:
+  #   image: openziti/zrok
+  #   restart: unless-stopped
+  #   user: "${UID}:${GID}"
+  #   volumes:
+  #     - ${HOME}/.zrok:/mnt/.zrok
+  #   environment:
+  #     HOME: /mnt
+  #     PFXLOG_NO_JSON: "true"
+  #     ZROK_UNIQUE_NAME_VNC:  
+  #   command: share reserved ${ZROK_UNIQUE_NAME_VNC} --headless --override-endpoint http://browser-use-webui:6080
